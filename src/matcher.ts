@@ -48,9 +48,13 @@ export function findRecordMatches(
   requestHeaders: Headers,
   requestBody: Buffer,
   rewriteBeforeDiffRules: RewriteRules,
+  match:boolean
 ): TapeRecord[] {
   let bestSimilarityScore = +Infinity;
   let bestMatches: TapeRecord[] = [];
+  if(match){
+    bestSimilarityScore=0
+  }
   for (const potentialMatch of tapeRecords) {
     const similarityScore = computeSimilarity(
       requestMethod,

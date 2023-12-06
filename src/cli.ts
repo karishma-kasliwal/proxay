@@ -88,6 +88,7 @@ async function main(argv: string[]) {
       rewriteRule,
       new RewriteRules(),
     )
+    .option("-match","Strict request matching")
     .parse(argv);
 
   const options = program.opts();
@@ -105,6 +106,7 @@ async function main(argv: string[]) {
   const unframeGrpcWebJsonRequestsHostnames: string[] =
     options.unframeGrpcWebJsonRequestsHostname;
   const rewriteBeforeDiffRules: RewriteRules = options.rewriteBeforeDiff;
+  const match: boolean = options.match || false
 
   switch (initialMode) {
     case "record":
@@ -157,6 +159,7 @@ async function main(argv: string[]) {
     httpsCert,
     unframeGrpcWebJsonRequestsHostnames,
     rewriteBeforeDiffRules,
+    match,
   });
   await server.start(port);
   console.log(chalk.green(`Proxying in ${initialMode} mode on port ${port}.`));
