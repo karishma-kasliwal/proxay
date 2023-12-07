@@ -57,6 +57,7 @@ async function main(argv: string[]) {
     .option("--default-tape <tape-name>", "Name of the default tape", "default")
     .option("-h, --host <host>", "Host to proxy (not required in replay mode)")
     .option("-p, --port <port>", "Local port to serve on", "3000")
+    .option("-s, --score <score>", "Matching score")
     .option(
       "-r, --redact-headers <headers>",
       "Request headers to redact",
@@ -88,7 +89,6 @@ async function main(argv: string[]) {
       rewriteRule,
       new RewriteRules(),
     )
-    .option("-match","Strict request matching")
     .parse(argv);
 
   const options = program.opts();
@@ -106,7 +106,7 @@ async function main(argv: string[]) {
   const unframeGrpcWebJsonRequestsHostnames: string[] =
     options.unframeGrpcWebJsonRequestsHostname;
   const rewriteBeforeDiffRules: RewriteRules = options.rewriteBeforeDiff;
-  const match: boolean = options.match || false
+  const match: number = options.score === undefined ? +Infinity : parseInt(options.score)
 
   switch (initialMode) {
     case "record":

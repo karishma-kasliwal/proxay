@@ -30,7 +30,7 @@ export class RecordReplayServer {
   private preventConditionalRequests?: boolean;
   private unframeGrpcWebJsonRequestsHostnames: string[];
   private rewriteBeforeDiffRules: RewriteRules;
-  match: boolean;
+  private match: number;
 
   constructor(options: {
     initialMode: Mode;
@@ -46,7 +46,7 @@ export class RecordReplayServer {
     httpsCert?: string;
     unframeGrpcWebJsonRequestsHostnames?: string[];
     rewriteBeforeDiffRules?: RewriteRules;
-    match?:boolean
+    match?: number
   }) {
     this.currentTapeRecords = [];
     this.mode = options.initialMode;
@@ -61,7 +61,7 @@ export class RecordReplayServer {
       options.unframeGrpcWebJsonRequestsHostnames || [];
     this.rewriteBeforeDiffRules =
       options.rewriteBeforeDiffRules || new RewriteRules();
-    this.match = options.match || false;
+    this.match = options.match === undefined ? +Infinity : options.match;
     this.loadTape(this.defaultTape);
 
     const handler = async (
@@ -86,7 +86,7 @@ export class RecordReplayServer {
           method: req.method,
           path: extractPath(req.url),
           headers: req.headers,
-          body: await receiveRequestBody(req),
+          body: await receiveRequestBody(req)
         };
 
         // Is this a proxay API call?
